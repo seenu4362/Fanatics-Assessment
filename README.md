@@ -20,13 +20,10 @@ This project showcases a list of top games, stores, and leader board. Users can 
 - Managed using Redux and stored in localStorage for persistence.
 - Users can collect and track diamonds.
 
-### 5. Hosting Setup
-- Ready for deployment with a `server.js` configuration.
-
-### 6. Lighthouse Score
+### 5. Lighthouse Score
 - Optimized for a 90%+ Lighthouse score.
 
-### 7. Infinite Scrolling
+### 6. Infinite Scrolling
 - Auto-loads more content as users scroll.
 
 
