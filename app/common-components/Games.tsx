@@ -28,41 +28,41 @@ export default function Games() {
   const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
   const router = useRouter();
 
-  const fetchGames = async (isScrollToBottom = false) => {
+  const fetchGames = useCallback(async (isScrollToBottom = false) => {
     setLoading(true);
     try {
       const url =
-        isScrollToBottom && nextPageUrl
-          ? nextPageUrl
-          : API_REQUESTS.GET_GAMES;
-
+        isScrollToBottom && nextPageUrl ? nextPageUrl : API_REQUESTS.GET_GAMES;
+  
       const data: ApiResponse = await httpService(url);
-      
+  
       setGames((prevGames) => [...prevGames, ...data.results]);
-
-      setNextPageUrl((prevUrl) => data.next || prevUrl); // ✅ Functional state update
+  
+      setNextPageUrl((prevUrl) => data.next || prevUrl); //  Functional state update
     } catch (err) {
       console.error("Error fetching games:", err);
     } finally {
       setLoading(false);
     }
-  };
-
+  }, [nextPageUrl]); //  useCallback ensures fetchGames is stable unless nextPageUrl changes
+  
+  //  Ensuring fetchGames is only called when the component mounts
   useEffect(() => {
-    fetchGames(); // ✅ Removed dependencies to prevent re-renders
-  }, []);
+    fetchGames();
+  }, [fetchGames]); //  Now fetchGames is stable, preventing unnecessary re-renders
+  
 
   const handleScroll = useCallback(() => {
-    const mainElement = document.querySelector("main") as HTMLElement;
-    if (!mainElement) return;
-
-    const isBottom =
-      mainElement.scrollHeight === mainElement.scrollTop + mainElement.clientHeight;
-
-    if (isBottom) {
-      fetchGames(true);
-    }
-  }, [nextPageUrl]); // ✅ `nextPageUrl` is now stable
+     const mainElement = document.querySelector('main') as HTMLElement;
+     if (!mainElement) return;
+   
+     const isBottom =
+       mainElement.scrollHeight === mainElement.scrollTop + mainElement.clientHeight;
+   
+     if (isBottom && nextPageUrl) {
+       fetchGames(true); // Load more leaders when reaching the bottom
+     }
+   }, [fetchGames, nextPageUrl]);
 
   useEffect(() => {
     const mainElement = document.querySelector("main") as HTMLElement;

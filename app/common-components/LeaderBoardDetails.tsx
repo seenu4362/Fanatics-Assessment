@@ -59,7 +59,7 @@ export default function LeaderBoardDeatils() {
   // Fetch initial list of leaders when the component mounts
   useEffect(() => {
     getLeaders();
-  }, []);
+  }, [getLeaders]);
 
   // Callback to handle infinite scrolling logic
   const handleScroll = useCallback(() => {
