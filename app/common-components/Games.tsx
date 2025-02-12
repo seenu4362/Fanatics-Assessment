@@ -231,7 +231,7 @@ export default function Games() {
           {games.map((game, index) => (
             <div
               key={`${game.id}-${index}`}
-              className="max-w-xs rounded overflow-hidden shadow-lg bg-white m-4"
+              className="max-xs rounded overflow-hidden shadow-lg bg-white m-4"
               onClick={() => navigateToGameDetails(game)}
             >
               <Image
