@@ -28,6 +28,12 @@ export default function Games() {
   const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
   const router = useRouter();
 
+  /**
+   * Fetches games from the API.
+   * If `isScrollToBottom` is true, it loads more games when scrolling to the bottom.
+   * Otherwise, it fetches the initial list of games.
+   * @param isScrollToBottom - Boolean flag to indicate whether the request is for infinite scrolling.
+   */
   const fetchGames = useCallback(async (isScrollToBottom = false) => {
     setLoading(true);
     try {
@@ -38,20 +44,26 @@ export default function Games() {
   
       setGames((prevGames) => [...prevGames, ...data.results]);
   
-      setNextPageUrl((prevUrl) => data.next || prevUrl); //  Functional state update
+      setNextPageUrl((prevUrl) => data.next || prevUrl); 
     } catch (err) {
       console.error("Error fetching games:", err);
     } finally {
       setLoading(false);
     }
-  }, [nextPageUrl]); //  useCallback ensures fetchGames is stable unless nextPageUrl changes
+  }, [nextPageUrl]); 
   
-  //  Ensuring fetchGames is only called when the component mounts
+ /**
+   * Fetches initial games when the component mounts.
+   * The dependency array ensures fetchGames is only called once on mount.
+   */
   useEffect(() => {
     fetchGames();
-  }, [fetchGames]); //  Now fetchGames is stable, preventing unnecessary re-renders
+  }, [fetchGames]); 
   
-
+  /**
+   * Handles infinite scrolling by checking if the user has scrolled to the bottom.
+   * If true, it fetches the next page of games.
+   */
   const handleScroll = useCallback(() => {
      const mainElement = document.querySelector('main') as HTMLElement;
      if (!mainElement) return;
@@ -60,9 +72,13 @@ export default function Games() {
        mainElement.scrollHeight === mainElement.scrollTop + mainElement.clientHeight;
    
      if (isBottom && nextPageUrl) {
-       fetchGames(true); // Load more leaders when reaching the bottom
+       fetchGames(true); 
      }
    }, [fetchGames, nextPageUrl]);
+
+  /**
+   * Adds and removes the scroll event listener to detect when the user reaches the bottom.
+   */
 
   useEffect(() => {
     const mainElement = document.querySelector("main") as HTMLElement;
@@ -74,6 +90,10 @@ export default function Games() {
     };
   }, [handleScroll]);
 
+    /**
+   * Navigates to the game details page using Next.js router.
+   * @param game - The selected game object to navigate to its details page.
+   */
   const navigateToGameDetails = (game: Game) => {
     router.push(`/games/${game.slug}`);
   };

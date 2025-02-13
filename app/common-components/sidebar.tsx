@@ -22,6 +22,10 @@ export default function Sidebar({}: SidebarProps ) {
     const count = useSelector((state: RootState) => state.counter.value);
     const [menuOpen, setMenuOpen] = useState(false);
 
+     /**
+     * Handles the user logout process.
+     * Resets the counter state in Redux and signs the user out.
+     */
     const handleLogout = () => {
         dispatch(resetCount());
         signOut();

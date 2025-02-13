@@ -33,9 +33,13 @@ export default function LeaderBoardDeatils() {
   const [loading, setLoading] = useState(false);
   const [nextPageUrl, setNextPageUrl] = useState("");
 
-  // Function to fetch leaders data (supports pagination)
+/**
+ * Fetches and updates the leaderboard data.
+ * Supports infinite scrolling by appending new results to the existing list.
+ * @param isScrollToBottom - Boolean flag to indicate whether the function is triggered by scrolling.
+ */
   const getLeaders = useCallback(async (isScrollToBottom?: boolean) => {
-    setLoading(true); // Show loading indicator
+    setLoading(true); 
     try {
       const data = await httpService(
         isScrollToBottom ? nextPageUrl : API_REQUESTS.GET_CREATORS.URL
@@ -44,15 +48,15 @@ export default function LeaderBoardDeatils() {
         setLeaders((prevCreators: ILeaderboard[]) => [
           ...prevCreators,
           ...data.results,
-        ]); // Append new leaders to the list
-        setNextPageUrl(data?.next); // Update next page URL
+        ]);
+        setNextPageUrl(data?.next); 
       } else {
-        console.error("No leaders found"); // Handle case when no leaders are returned
+        console.error("No leaders found"); 
       }
     } catch (error) {
-      console.error(error); // Log any errors
+      console.error(error); 
     } finally {
-      setLoading(false); // Hide loading indicator
+      setLoading(false); 
     }
   }, [nextPageUrl]);
 
@@ -61,7 +65,10 @@ export default function LeaderBoardDeatils() {
     getLeaders();
   }, [getLeaders]);
 
-  // Callback to handle infinite scrolling logic
+  /**
+ * Handles the infinite scrolling logic.
+ * Detects when the user has scrolled to the bottom and loads more data.
+ */
   const handleScroll = useCallback(() => {
     const mainElement = document.querySelector('main') as HTMLElement;
     if (!mainElement) return;
@@ -70,11 +77,14 @@ export default function LeaderBoardDeatils() {
       mainElement.scrollHeight === mainElement.scrollTop + mainElement.clientHeight;
   
     if (isBottom && nextPageUrl) {
-      getLeaders(true); // Load more leaders when reaching the bottom
+      getLeaders(true);
     }
   }, [getLeaders, nextPageUrl]);
   
-  // Attach and detach the scroll event listener to ".main"
+  /**
+ * Attaches a scroll event listener to the main container.
+ * Removes the event listener when the component unmounts.
+ */
   useEffect(() => {
     const mainElement = document.querySelector('main') as HTMLElement;
     if (!mainElement) return;

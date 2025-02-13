@@ -7,7 +7,12 @@ export interface IStore {
   image_background: string;
   games: { slug: string; name: string; added: number }[];
 }
-
+/**
+ * Fetches and displays a list of stores.
+ * Uses the `httpService` to retrieve store data from the API.
+ * 
+ * @returns A `Stores` component with the fetched store data.
+ */
 const StoresPage = async () => {
   let stores: IStore[] = [];
   try {
